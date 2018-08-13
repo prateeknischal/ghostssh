@@ -1,6 +1,5 @@
 #ifndef GHOSTSSH_H
 #define GHOSTSSH_H
-#endif
 
 #include <stdio.h>
 #include <time.h>
@@ -15,10 +14,6 @@
 #include <pthread.h>
 
 #include "tlog.h"
-
-#ifndef GHOSTSSH_CRED_H
-#include "ghostssh_cred.h"
-#endif
 
 #define BUFF_SIZE   0xff
 #define SLEEP_TIME  5
@@ -275,7 +270,8 @@ int ghostssh_run_command(struct ssh_host *ctx, const char *cmd, const char *type
                 return rc;
             }
 
-            write(ctx->fd, curr_time, strlen(curr_time) - 1);
+            pthread_mutex_lock(&log_lock);
+            write(ctx->fd, curr_time, strlen(curr_time));
             write(ctx->fd, " | ", 3);
             write(ctx->fd, ctx->ip_addr, strlen(ctx->ip_addr));
             write(ctx->fd, " | ", 3);
@@ -293,6 +289,7 @@ int ghostssh_run_command(struct ssh_host *ctx, const char *cmd, const char *type
                 }
                 rc = libssh2_channel_read(ctx->channel, buff, sizeof(buff));
             }
+            pthread_mutex_unlock(&log_lock);
             break;
         default:
             tlog(stderr,
@@ -373,3 +370,5 @@ int ghostssh_thread_create(void *(*run)(void *), struct job_queue *q) {
     }
     return 0;
 }
+
+#endif

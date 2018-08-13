@@ -8,10 +8,12 @@ time_t rawtime;
 struct tm *timeinfo;
 
 char* get_time() {
-    time (&rawtime);
+    char *t = malloc(30 * sizeof(char));
+
+    time(&rawtime);
     timeinfo = localtime(&rawtime);
-    char *t = (char *) malloc(30 * sizeof(char));
     strftime(t, 30,"[%F %X]",timeinfo);
+
     return t;
 }
 
@@ -29,8 +31,9 @@ void tlog(FILE *fp, const char *fmt, ...) {
 
     // print anything other than output to stderr
     pthread_mutex_lock(&log_lock);
-    fprintf(stderr, "%s ", get_time());
-    vfprintf(stderr, fmt, args);
+    fprintf(fp, "%s ", get_time());
+    vfprintf(fp, fmt, args);
+    fflush(fp);
     pthread_mutex_unlock(&log_lock);
     va_end(args);
 }

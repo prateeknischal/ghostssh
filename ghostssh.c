@@ -4,7 +4,7 @@
 #include <errno.h>
 #include <stdio.h>
 
-#ifndef GHOSTSST_H
+#ifndef GHOSTSSH_H
 #include "ghostssh.h"
 #endif
 
@@ -54,7 +54,11 @@ void *run(void *q) {
     return NULL;
 }
 
-int main(int argc, char **argv) {
+#if defined(GHOSTSSH_USERNAME) && defined(GHOSTSSH_PASSWORD)
+int main() {
+#else
+int main(int argc, char **argv){
+#endif
     int rc, _q_size = 0;
     // 255.255.255.255\0 max length:16
     char buff[16];
@@ -69,7 +73,7 @@ int main(int argc, char **argv) {
         ++_q_size;
     }
 
-#if defined(GHOSTSSH_STATIC)
+#if defined(GHOSTSSH_USERNAME) && defined(GHOSTSSH_PASSWORD)
     ghostssh_init(GHOSTSSH_USERNAME, GHOSTSSH_PASSWORD);
 #else
     if (argc < 2) {

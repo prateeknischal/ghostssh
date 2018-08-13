@@ -31,13 +31,13 @@ This is the only extra library that you need to run this binary. All other ones 
 **Note** - Edit the commands in the `ghostssh.c` file to what even you need. This binary will get the average cpu load and memory usage for a machine
 
 There are 2 modes for this to build:
-1. With `-DGHOSTSSH_STATIC` GCC flag for which you will need to run `configure.py`. This will ask you for the username and password for the remote machine(s) and then build the binary with that information.
+1. With `GHOSTSSH_USERNAME` and `GHOSTSSH_PASSWORD` flags in GCC. This will ask you for the password for the remote machine(s) and then build the binary with that information.
 
   ```
-  $ sudo make static
+  $ sudo make static GHOSTSSH_USERNAME=<username>
   ```
 
-  **Note** - The binary will contain the username and password in plain text, so be sure to have the permissions of the new binary to be `--x------`, which is only owner has the permission to execute it and no one can read the binary. (this step is included in the Makefile)
+  **Note** - The binary will contain the username and password in plain text, so be sure to have the permissions of the new binary to be `--x------`, which is only owner has the permission to execute it and no one can read the binary. (this step is included in the Makefile for target `static`)
 
 2. Without any extra flag. This mode will build the binary in such a way that it will ask for the password once during startup and have it in memory and use it to authenticate with all machines.
 ```
@@ -77,4 +77,4 @@ $ cat bin_in_base64.txt | base64 -d > ghostssh
 
 #### Improvements:
 * Make it bullet proof - check if the session to a host has terminated, if yes, start a new one
-* Allow commands to be configurable as the username/password via configure.py
+* Allow commands to be configurable as the username/password
