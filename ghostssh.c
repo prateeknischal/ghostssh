@@ -8,7 +8,8 @@
 #include "ghostssh.h"
 #endif
 
-const char *cpu =   "python -c \"import os; print os.getloadavg()[2]\"";
+//const char *cpu =   "python -c \"import os; print os.getloadavg()[2]\"";
+const char *cpu =   "top -bn1|grep \"Cpu(s)\"|sed \"s/.*, *\([0-9.]*\)%* id.*/\1/\" |awk '{print (100 - $1)/100}'"
 const char *mem =   "cat /proc/meminfo | head -n2 | tr -d ' ' "
                     "| python -c 'import sys; t=[x.strip(\"\\nkB \").split(\":\")[-1]"
                     "for x in sys.stdin.readlines()];print \"%.3f\"%(float(t[1])/float(t[0]))'";
